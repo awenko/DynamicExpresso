@@ -1,16 +1,11 @@
 # Dynamic Expresso
 
-[![NuGet version](https://badge.fury.io/nu/DynamicExpresso.Core.svg)](http://badge.fury.io/nu/DynamicExpresso.Core)
-![build master](https://davideicardi.visualstudio.com/_apis/public/build/definitions/d6fd0002-6d51-417b-928e-27591379dfc4/4/badge)
-
-Available platforms: .NET Core 2.0, .NET 4.6.1
-
 Dynamic Expresso is an interpreter for simple C# statements written in .NET Standard 2.0.
 Dynamic Expresso embeds its own parsing logic, really interprets C# statements by converting it to .NET lambda expressions or delegates.
 
-Using Dynamic Expresso developers can create scriptable applications, execute .NET code without compilation or create dynamic linq statements. 
+Using Dynamic Expresso developers can create scriptable applications, execute .NET code without compilation or create dynamic linq statements.
 
-Statements are written using a subset of C# language specifications. Global variables or parameters can be injected and used inside expressions. It doesn't generate assembly but it creates an expression tree on the fly. 
+Statements are written using a subset of C# language specifications. Global variables or parameters can be injected and used inside expressions. It doesn't generate assembly but it creates an expression tree on the fly.
 
 ![dynamic expresso workflow](https://raw.github.com/davideicardi/DynamicExpresso/master/docs/workflow.png "dynamic expresso workflow")
 
@@ -59,7 +54,7 @@ Source code and symbols (.pdb files) for debugging are available on [Symbol Sour
 - Open source (MIT license)
 
 ### Return value
-You can parse and execute void expression (without a return value) or you can return any valid .NET type. 
+You can parse and execute void expression (without a return value) or you can return any valid .NET type.
 When parsing an expression you can specify the expected expression return type. For example you can write:
 ```csharp
 var target = new Interpreter();
@@ -118,13 +113,13 @@ Assert.AreEqual(30, myFunc.Invoke(32, -2));
 ### Built-in types and custom types
 Currently predefined types available are:
 
-	Object object 
-	Boolean bool 
+	Object object
+	Boolean bool
 	Char char
 	String string
 	SByte Byte byte
-	Int16 UInt16 Int32 int UInt32 Int64 long UInt64 
-	Single Double double Decimal decimal 
+	Int16 UInt16 Int32 int UInt32 Int64 long UInt64
+	Single Double double Decimal decimal
 	DateTime TimeSpan
 	Guid
 	Math Convert
@@ -138,7 +133,7 @@ Assert.AreEqual(Uri.UriSchemeHttp, target.Eval("Uri.UriSchemeHttp"));
 ```
 
 ### Generate dynamic delegates
-You can use the `Interpreter.ParseAsDelegate<TDelegate>` method to directly parse an expression into a .NET delegate type that can be normally invoked. 
+You can use the `Interpreter.ParseAsDelegate<TDelegate>` method to directly parse an expression into a .NET delegate type that can be normally invoked.
 In the example below I generate a `Func<Customer, bool>` delegate that can be used in a LINQ where expression.
 ```csharp
 class Customer
@@ -170,7 +165,7 @@ public void Linq_Where()
 This is the preferred way to parse an expression that you known at compile time what parameters can accept and what value must return.
 
 ### Generate lambda expressions
-You can use the `Interpreter.ParseAsExpression<TDelegate>` method to directly parse an expression into a .NET lambda expression (`Expression<TDelegate>`). 
+You can use the `Interpreter.ParseAsExpression<TDelegate>` method to directly parse an expression into a .NET lambda expression (`Expression<TDelegate>`).
 
 In the example below I generate a `Expression<Func<Customer, bool>>` expression that can be used in a Queryable LINQ where expression or in any other place where an expression is required. Like Entity Framework or other similar libraries.
 ```csharp
@@ -202,7 +197,7 @@ public void Linq_Queryable_Expression_Where()
 ```
 
 ## Syntax and operators
-Statements can be written using a subset of the C# syntax. Here you can find a list of the supported expressions: 
+Statements can be written using a subset of the C# syntax. Here you can find a list of the supported expressions:
 
 ### Operators
 
@@ -340,7 +335,7 @@ var target = new Interpreter();
 
 var detectedIdentifiers = target.DetectIdentifiers("x + y");
 
-CollectionAssert.AreEqual(new[] { "x", "y" }, 
+CollectionAssert.AreEqual(new[] { "x", "y" },
 			  detectedIdentifiers.UnknownIdentifiers.ToArray());
 ```
 
@@ -350,13 +345,13 @@ Not every C# syntaxes are supported. Here some examples of NOT supported feature
 - Multiline expressions
 - for/foreach/while/do operators
 - Array/list/dictionary initialization
-- Explicit generic invocation (like `method<type>(arg)`) 
+- Explicit generic invocation (like `method<type>(arg)`)
 - Lambda/delegate declaration (delegate and lamda are only supported as variables or parameters or as a return type of the expression)
 - Array/list/dictionary element assignment (set indexer operator)
 - Other operations on `dynamic` objects (only property and method invocation now are supported)
 
 ## Exceptions
-If there is an error during the parsing always an exception of type `ParseException` is throwed. 
+If there is an error during the parsing always an exception of type `ParseException` is throwed.
 `ParseException` has several specialization classes based on the type of error (UnknownIdentifierException, NoApplicableMethodException. ...).
 
 ## Performance and multithreading
@@ -369,18 +364,18 @@ If you need to run the same expression multiple times with different parameters 
 ## Security
 If you allow an end user to write expression you must consider some security implications.
 
-Parsed expressions can access only the .NET types that you have referenced using the `Interpreter.Reference` method or types that you pass as a variable or parameter. 
+Parsed expressions can access only the .NET types that you have referenced using the `Interpreter.Reference` method or types that you pass as a variable or parameter.
 You must pay attention of what types you expose.
-In any case generated delegates are executed as any other delegate and standard security .NET rules can be applied (for more info see [Security in the .NET Framework](http://msdn.microsoft.com/en-us/library/fkytk30f.aspx)). 
+In any case generated delegates are executed as any other delegate and standard security .NET rules can be applied (for more info see [Security in the .NET Framework](http://msdn.microsoft.com/en-us/library/fkytk30f.aspx)).
 
 If expressions test can be written directly by users you must ensure that only certain features are available. Here some guidelines:
 
-For example you can disable assignment operators, to ensure that the user cannot change some values that you don't expect. 
+For example you can disable assignment operators, to ensure that the user cannot change some values that you don't expect.
 By default assignment operators are enables, by you can disable it using:
 ```csharp
 var target = new Interpreter().EnableAssignment(AssignmentOperators.None);
 ```
-From version 1.3 to prevent malicious users to call unexpected types or assemblies within an expression, 
+From version 1.3 to prevent malicious users to call unexpected types or assemblies within an expression,
 some reflection methods are blocked. For example you cannot write:
 ```csharp
 var target = new Interpreter();
@@ -415,16 +410,16 @@ If you need help you can try one of the following:
 
 ## Credits
 This project is based on two old works:
-- "Converting String expressions to Funcs with FunctionFactory by Matthew Abbott" (http://www.fidelitydesign.net/?p=333) 
+- "Converting String expressions to Funcs with FunctionFactory by Matthew Abbott" (http://www.fidelitydesign.net/?p=333)
 - DynamicQuery - Dynamic LINQ - Visual Studio 2008 sample:
-	- http://msdn.microsoft.com/en-us/vstudio/bb894665.aspx 
+	- http://msdn.microsoft.com/en-us/vstudio/bb894665.aspx
 
 
 Thanks to JetBrain for helping me with a license of Resharper.
 [![JetBrain Resharper](https://github.com//davideicardi/DynamicExpresso/blob/master/docs/jetbrains.png?raw=true)](https://www.jetbrains.com/)
 
 ## Other resources or similar projects
-Below you can find a list of some similar projects that I have evaluated or that can be interesting to study. 
+Below you can find a list of some similar projects that I have evaluated or that can be interesting to study.
 For one reason or another none of these projects exactly fit my needs so I decided to write my own interpreter.
 
 - Roslyn Project - Scripting API - https://github.com/dotnet/roslyn/wiki/Scripting-API-Samples
